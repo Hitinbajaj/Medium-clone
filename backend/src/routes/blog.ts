@@ -15,13 +15,14 @@ export const blogRouter = new Hono<{
 
 blogRouter.use("/*", async (c, next) => {
     
-    const authHeaderBearer = c.req.header("Authorization");
-    if (!authHeaderBearer){
+    const authHeader = c.req.header("Authorization");
+    
+    if (!authHeader){
         return c.json({
             message: "You are not logged in"
         })
     }
-    const authHeader= authHeaderBearer.split(" ")[1];
+    
     try {
         const user = await verify(authHeader, c.env.JWT_SECRET);
         if (user) {
